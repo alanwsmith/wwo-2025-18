@@ -1,1 +1,85 @@
-/* no extra styles for this site */
+.wrapper {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+/*
+[data-receive=shelf] {
+  display: grid;
+  outline: 1px solid red;
+}
+
+[data-receive="body"] {
+  position: relative;
+  height: 400px;
+}
+
+[data-receive=faceItem] {
+  top: 22px;
+  left: 108px;
+  width: 84px;
+  height: auto;
+}
+*/
+
+
+.shelf-wrapper {
+  outline: 1px solid blue;
+}
+
+/*
+[data-send=faceItem]  {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+*/
+
+
+.face-svg {
+  width: 40%;
+  height: auto;
+}
+
+.body-mono-thunder-t-shirt {
+  position: absolute;
+  top: 130px;
+  left: 30px;
+  width: 200px;
+  height: auto;
+}
+
+.head-mono-shaved-1 {
+  position: absolute;
+  top: 27px;
+  left: 95px;
+  width: 108px;
+  height: auto;
+}
+
+.face-smile {
+  position: absolute;
+  top: 64px;
+  left: 128px;
+  width: 70px;
+  height: auto;
+}
+
+.shelf-item {
+  display: flex;
+  justify-content: center;
+}
+
+.shelf-item.current svg {
+  opacity: 0;
+}
+
+
+/* .accessories-eyepatch{ */
+/*   position: absolute; */
+/*   top: 70px; */
+/*   left: 106px; */
+/*   width: 97px; */
+/*   height: auto; */
+/* } */

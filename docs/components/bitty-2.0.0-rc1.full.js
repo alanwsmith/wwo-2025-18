@@ -258,6 +258,10 @@ class BittyJs extends HTMLElement {
     }
   }
 
+  // matches the dataset key from an
+  // event and an element. If no key
+  // is identified the uuid is used 
+  // instead
   match(event, el, key = "") {
     if (key === "") {
       key = "uuid";
@@ -306,6 +310,21 @@ class BittyJs extends HTMLElement {
     });
   }
 
+  // Creates a template and returns the first
+  // child from it as an element.
+  useEl(content, subs = []) {
+    subs.forEach((sub) => {
+      content = content.replaceAll(sub[0], sub[1]);
+    });
+    const tmpl = document.createElement("template");
+    tmpl.innerHTML = content.trim();
+    const el = tmpl.content.cloneNode(true);
+    return el.firstChild;
+  }
+
+  // Returns a template document fragment 
+  // from the string after doing replaments
+  // from the subs array. 
   useTemplate(content, subs = []) {
     subs.forEach((sub) => {
       content = content.replaceAll(sub[0], sub[1]);
@@ -314,6 +333,7 @@ class BittyJs extends HTMLElement {
     el.innerHTML = content;
     return el.content.cloneNode(true);
   }
+
 }
 
 customElements.define(tagName, BittyJs);
