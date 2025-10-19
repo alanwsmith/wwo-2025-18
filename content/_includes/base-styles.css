@@ -1803,8 +1803,6 @@ body {
   font-size: var(--default-font);
 }
 button {
-  background-color: var(--match-faded);
-  border: var(--reverse-border);
   border-radius: var(--xsmall-radius);
   color: var(--reverse);
   cursor: pointer;
@@ -2069,6 +2067,7 @@ sup {
 }
 svg {
   max-width: 100%;
+  pointer-events: none;
 }
 table {
   margin: var(--default-margin);
