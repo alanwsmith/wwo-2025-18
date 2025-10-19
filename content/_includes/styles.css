@@ -1,32 +1,22 @@
 .wrapper {
+  background-color: var(--reverse-faded2);
+  border-radius: var(--default-radius);
   position: relative;
   display: grid;
   grid-template-columns: 2fr 1fr;
 }
 
-/*
-[data-receive=shelf] {
-  display: grid;
-  outline: 1px solid red;
-}
-
-[data-receive="body"] {
-  position: relative;
-  height: 400px;
-}
-
-[data-receive=faceItem] {
-  top: 22px;
-  left: 108px;
-  width: 84px;
-  height: auto;
-}
-*/
-
-
 .body {
   position: relative;
   height: 400px;
+}
+
+.body-mono-thunder-t-shirt {
+  position: absolute;
+  top: 130px;
+  left: 30px;
+  width: 200px;
+  height: auto;
 }
 
 .face-item {
@@ -41,30 +31,11 @@
   opacity: 0;
 }
 
-.shelf-wrapper {
-  outline: 1px solid blue;
-}
-
-/*
-[data-send=faceItem]  {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-*/
-
-
-.face-svg {
-  width: 40%;
-  height: auto;
-}
-
-
-.body-mono-thunder-t-shirt {
+.face-smile {
   position: absolute;
-  top: 130px;
-  left: 30px;
-  width: 200px;
+  top: 64px;
+  left: 128px;
+  width: 70px;
   height: auto;
 }
 
@@ -76,28 +47,17 @@
   height: auto;
 }
 
-.face-smile {
-  position: absolute;
-  top: 64px;
-  left: 128px;
-  width: 70px;
-  height: auto;
-}
-
 .shelf-item {
   display: flex;
   justify-content: center;
+}
+
+.shelf-item svg {
+  width: 40%;
+  height: auto;
 }
 
 .shelf-item.current svg {
   opacity: 0;
 }
 
-
-/* .accessories-eyepatch{ */
-/*   position: absolute; */
-/*   top: 70px; */
-/*   left: 106px; */
-/*   width: 97px; */
-/*   height: auto; */
-/* } */
