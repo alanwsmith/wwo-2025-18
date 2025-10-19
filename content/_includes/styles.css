@@ -24,6 +24,23 @@
 */
 
 
+.body {
+  position: relative;
+  height: 400px;
+}
+
+.face-item {
+  position: absolute;
+  top: 22px;
+  left: 108px;
+  width: 84px;
+  height: auto;
+}
+
+.face-item.hidden svg {
+  opacity: 0;
+}
+
 .shelf-wrapper {
   outline: 1px solid blue;
 }
@@ -41,6 +58,7 @@
   width: 40%;
   height: auto;
 }
+
 
 .body-mono-thunder-t-shirt {
   position: absolute;

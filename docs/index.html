@@ -2206,6 +2206,23 @@ code {
 */
 
 
+.body {
+  position: relative;
+  height: 400px;
+}
+
+.face-item {
+  position: absolute;
+  top: 22px;
+  left: 108px;
+  width: 84px;
+  height: auto;
+}
+
+.face-item.hidden svg {
+  opacity: 0;
+}
+
 .shelf-wrapper {
   outline: 1px solid blue;
 }
@@ -2223,6 +2240,7 @@ code {
   width: 40%;
   height: auto;
 }
+
 
 .body-mono-thunder-t-shirt {
   position: absolute;
@@ -2307,23 +2325,20 @@ code {
     <script>
 const t = {
   face: `
-    <div data-receive="hideFaceItem" data-item="ITEM"></div>`, 
-shelf: `
-  <button 
-    class="shelf-item"
-    data-send="updateItem" 
-    data-receive="updateItem" 
-    data-item="ITEM"></button>`,
+    <div class="face-item" data-receive="updateFaceItem" data-item="ITEM"></div>`, 
+
+  shelf: `
+    <button 
+      class="shelf-item"
+      data-send="updateShelfItem" 
+      data-receive="updateShelfItem" 
+      data-item="ITEM"></button>`,
 }
 const items = [
   "eyepatch", "glasses", "glasses-2", "glasses-3", "glasses-4", "glasses-5", "sunglasses", "sunglasses-2",
 ];
 
 window.Trader = class {
-  #current = null;
-
-  bittyInit() {}
-
   async body(_event, el){
     let svg = await this.api.fetchSVG("/svgs/body/thunder-t-shirt.svg");
     el.appendChild(svg);
@@ -2335,18 +2350,10 @@ window.Trader = class {
       let subs = [["ITEM", key]];
       let svg = await this.api.fetchSVG(`/svgs/accessories/${key}.svg`);
       let item = await this.api.useEl(t.face, subs);
-      // item.hidden = true;
+      item.classList.add("hidden");
       item.appendChild(svg);
       el.appendChild(item);
     }
-  }
-
-
-  faceItem(event, el) {
-  }
-
-  switchFaceItem(event, el) {
-
   }
 
   async shelf(_event, el) {
@@ -2360,14 +2367,24 @@ window.Trader = class {
     }
   }
 
-  updateItem(event, el) {
+  updateFaceItem(event, el) {
+    if (this.api.match(event, el, "item")) {
+      el.classList.remove("hidden");
+    } else {
+      el.classList.add("hidden");
+    }
+  }
+
+  updateShelfItem(event, el) {
     if (this.api.match(event, el, "item")) {
       el.classList.add("current");
-      console.log(el);
     } else {
       el.classList.remove("current");
     }
+    this.api.forward(event, "updateFaceItem");
   }
+
+
 
 };    </script>
 
@@ -2396,7 +2413,7 @@ window.Trader = class {
 <div class="project-wrapper">
 <bitty-2-0 data-connect="Trader" data-send="body|shelf">
   <div class="wrapper">
-    <div data-receive="body"></div>
+    <div class="body" data-receive="body"></div>
     <div data-receive="shelf"></div>
   </div>
 </bitty-2-0>
@@ -2407,7 +2424,7 @@ window.Trader = class {
 <h3>The HTML</h3>
 <pre class="code-block"><code><span class="line-marker"></span><span class="text html basic"><span class="meta tag custom html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag custom html">bitty-2-0</span> <span class="meta attribute-with-value html"><span class="entity other attribute-name html">data-connect</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span>Trader<span class="punctuation definition string end html">&quot;</span></span></span> <span class="meta attribute-with-value html"><span class="entity other attribute-name html">data-send</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span>body|shelf<span class="punctuation definition string end html">&quot;</span></span></span><span class="punctuation definition tag end html">&gt;</span></span>
 <span class="line-marker"></span>  <span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag block any html">div</span> <span class="meta attribute-with-value class html"><span class="entity other attribute-name class html">class</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value class html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span></span></span><span class="meta attribute-with-value class html"><span class="string quoted double html"><span class="meta class-name html">wrapper</span><span class="punctuation definition string end html">&quot;</span></span></span><span class="punctuation definition tag end html">&gt;</span></span>
-<span class="line-marker"></span>    <span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag block any html">div</span> <span class="meta attribute-with-value html"><span class="entity other attribute-name html">data-receive</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span>body<span class="punctuation definition string end html">&quot;</span></span></span><span class="punctuation definition tag end html">&gt;</span></span><span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span>
+<span class="line-marker"></span>    <span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag block any html">div</span> <span class="meta attribute-with-value class html"><span class="entity other attribute-name class html">class</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value class html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span></span></span><span class="meta attribute-with-value class html"><span class="string quoted double html"><span class="meta class-name html">body</span><span class="punctuation definition string end html">&quot;</span></span></span> <span class="meta attribute-with-value html"><span class="entity other attribute-name html">data-receive</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span>body<span class="punctuation definition string end html">&quot;</span></span></span><span class="punctuation definition tag end html">&gt;</span></span><span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span>
 <span class="line-marker"></span>    <span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;</span><span class="entity name tag block any html">div</span> <span class="meta attribute-with-value html"><span class="entity other attribute-name html">data-receive</span><span class="punctuation separator key-value html">=</span></span><span class="meta attribute-with-value html"><span class="string quoted double html"><span class="punctuation definition string begin html">&quot;</span>shelf<span class="punctuation definition string end html">&quot;</span></span></span><span class="punctuation definition tag end html">&gt;</span></span><span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span>
 <span class="line-marker"></span>  <span class="meta tag block any html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag block any html">div</span><span class="punctuation definition tag end html">&gt;</span></span>
 <span class="line-marker"></span><span class="meta tag custom html"><span class="punctuation definition tag begin html">&lt;/</span><span class="entity name tag custom html">bitty-2-0</span><span class="punctuation definition tag end html">&gt;</span></span></span></code></pre>
@@ -2439,6 +2456,23 @@ window.Trader = class {
 <span class="line-marker"></span><span class="punctuation definition comment css">*/</span></span>
 <span class="line-marker"></span>
 <span class="line-marker"></span>
+<span class="line-marker"></span><span class="meta selector css"><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>body</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">position</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant property-value css">relative</span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">height</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">400<span class="keyword other unit css">px</span></span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span></span><span class="punctuation section property-list css">}</span>
+<span class="line-marker"></span>
+<span class="line-marker"></span><span class="meta selector css"><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>face-item</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">position</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant property-value css">absolute</span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">top</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">22<span class="keyword other unit css">px</span></span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">left</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">108<span class="keyword other unit css">px</span></span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">width</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">84<span class="keyword other unit css">px</span></span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">height</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant property-value css">auto</span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span></span><span class="punctuation section property-list css">}</span>
+<span class="line-marker"></span>
+<span class="line-marker"></span><span class="meta selector css"><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>face-item</span><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>hidden</span> <span class="entity name tag css">svg</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span>
+<span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">opacity</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">0</span></span><span class="punctuation terminator rule css">;</span>
+<span class="line-marker"></span></span><span class="punctuation section property-list css">}</span>
+<span class="line-marker"></span>
 <span class="line-marker"></span><span class="meta selector css"><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>shelf-wrapper</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span>
 <span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">outline</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">1<span class="keyword other unit css">px</span></span> <span class="support constant property-value css">solid</span> <span class="support constant color w3c-standard-color-name css">blue</span></span><span class="punctuation terminator rule css">;</span>
 <span class="line-marker"></span></span><span class="punctuation section property-list css">}</span>
@@ -2456,6 +2490,7 @@ window.Trader = class {
 <span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">width</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="constant numeric css">40<span class="keyword other unit css">%</span></span></span><span class="punctuation terminator rule css">;</span>
 <span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">height</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant property-value css">auto</span></span><span class="punctuation terminator rule css">;</span>
 <span class="line-marker"></span></span><span class="punctuation section property-list css">}</span>
+<span class="line-marker"></span>
 <span class="line-marker"></span>
 <span class="line-marker"></span><span class="meta selector css"><span class="entity other attribute-name class css"><span class="punctuation definition entity css">.</span>body-mono-thunder-t-shirt</span> </span><span class="meta property-list css"><span class="punctuation section property-list css">{</span>
 <span class="line-marker"></span>  <span class="meta property-name css"><span class="support type property-name css">position</span></span><span class="punctuation separator key-value css">:</span><span class="meta property-value css"> </span><span class="meta property-value css"><span class="support constant property-value css">absolute</span></span><span class="punctuation terminator rule css">;</span>
@@ -2502,23 +2537,20 @@ window.Trader = class {
 <h3>The JavaScript</h3>
 <pre class="code-block"><code><span class="line-marker"></span><span class="source js"><span class="storage type js">const</span> <span class="variable other readwrite js">t</span> <span class="keyword operator assignment js">=</span> <span class="meta object-literal js"><span class="punctuation section block js">{</span>
 <span class="line-marker"></span>  <span class="meta object-literal key js">face</span><span class="punctuation separator key-value js">:</span> <span class="string template js"><span class="punctuation definition string template begin js">`</span>
-<span class="line-marker"></span>    &lt;div data-receive=&quot;hideFaceItem&quot; data-item=&quot;ITEM&quot;&gt;&lt;/div&gt;<span class="punctuation definition string template end js">`</span></span><span class="punctuation separator comma js">,</span> 
-<span class="line-marker"></span><span class="meta object-literal key js">shelf</span><span class="punctuation separator key-value js">:</span> <span class="string template js"><span class="punctuation definition string template begin js">`</span>
-<span class="line-marker"></span>  &lt;button 
-<span class="line-marker"></span>    class=&quot;shelf-item&quot;
-<span class="line-marker"></span>    data-send=&quot;updateItem&quot; 
-<span class="line-marker"></span>    data-receive=&quot;updateItem&quot; 
-<span class="line-marker"></span>    data-item=&quot;ITEM&quot;&gt;&lt;/button&gt;<span class="punctuation definition string template end js">`</span></span><span class="punctuation separator comma js">,</span>
+<span class="line-marker"></span>    &lt;div class=&quot;face-item&quot; data-receive=&quot;updateFaceItem&quot; data-item=&quot;ITEM&quot;&gt;&lt;/div&gt;<span class="punctuation definition string template end js">`</span></span><span class="punctuation separator comma js">,</span> 
+<span class="line-marker"></span>
+<span class="line-marker"></span>  <span class="meta object-literal key js">shelf</span><span class="punctuation separator key-value js">:</span> <span class="string template js"><span class="punctuation definition string template begin js">`</span>
+<span class="line-marker"></span>    &lt;button 
+<span class="line-marker"></span>      class=&quot;shelf-item&quot;
+<span class="line-marker"></span>      data-send=&quot;updateShelfItem&quot; 
+<span class="line-marker"></span>      data-receive=&quot;updateShelfItem&quot; 
+<span class="line-marker"></span>      data-item=&quot;ITEM&quot;&gt;&lt;/button&gt;<span class="punctuation definition string template end js">`</span></span><span class="punctuation separator comma js">,</span>
 <span class="line-marker"></span><span class="punctuation section block js">}</span></span>
 <span class="line-marker"></span><span class="storage type js">const</span> <span class="variable other readwrite js">items</span> <span class="keyword operator assignment js">=</span> <span class="meta sequence js"><span class="punctuation section brackets js">[</span>
 <span class="line-marker"></span>  <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>eyepatch<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>glasses<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>glasses-2<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>glasses-3<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>glasses-4<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>glasses-5<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>sunglasses<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>sunglasses-2<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span>
 <span class="line-marker"></span><span class="punctuation section brackets js">]</span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>
 <span class="line-marker"></span><span class="support type object dom js">window</span><span class="punctuation accessor js">.</span><span class="meta property object js">Trader</span> <span class="keyword operator assignment js">=</span> <span class="meta class js"><span class="storage type class js">class</span> <span class="meta class js"><span class="meta block js"><span class="punctuation section block js">{</span></span></span></span><span class="meta class js"><span class="meta block js">
-<span class="line-marker"></span>  #current = null;
-<span class="line-marker"></span>
-<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">bittyInit</span><span class="punctuation section group begin js">(</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span><span class="punctuation section block js">}</span></span>
-<span class="line-marker"></span>
 <span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">async</span><span class="meta function declaration js"> </span></span><span class="meta function declaration js"><span class="entity name function js">body</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">_event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span></span><span class="meta block js"><span class="punctuation section block js">{</span>
 <span class="line-marker"></span>    <span class="storage type js">let</span> <span class="variable other readwrite js">svg</span> <span class="keyword operator assignment js">=</span> <span class="variable other readwrite js">await</span> <span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">fetchSVG</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>/svgs/body/thunder-t-shirt.svg<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>    <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">appendChild</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">svg</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
@@ -2530,18 +2562,10 @@ window.Trader = class {
 <span class="line-marker"></span>      <span class="storage type js">let</span> <span class="variable other readwrite js">subs</span> <span class="keyword operator assignment js">=</span> <span class="meta sequence js"><span class="punctuation section brackets js">[</span><span class="meta sequence js"><span class="punctuation section brackets js">[</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>ITEM<span class="punctuation definition string end js">&quot;</span></span><span class="punctuation separator comma js">,</span> <span class="variable other readwrite js">key</span><span class="punctuation section brackets js">]</span></span><span class="punctuation section brackets js">]</span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>      <span class="storage type js">let</span> <span class="variable other readwrite js">svg</span> <span class="keyword operator assignment js">=</span> <span class="variable other readwrite js">await</span> <span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">fetchSVG</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string template js"><span class="punctuation definition string template begin js">`</span>/svgs/accessories/</span><span class="meta template expression js"><span class="punctuation definition template-expression begin js">${</span></span><span class="meta template expression js"><span class="source js embedded expression"><span class="variable other readwrite js">key</span></span><span class="punctuation definition template-expression end js">}</span></span><span class="string template js">.svg<span class="punctuation definition string template end js">`</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>      <span class="storage type js">let</span> <span class="variable other readwrite js">item</span> <span class="keyword operator assignment js">=</span> <span class="variable other readwrite js">await</span> <span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">useEl</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other object js">t</span><span class="punctuation accessor js">.</span><span class="meta property object js">face</span><span class="punctuation separator comma js">,</span> <span class="variable other readwrite js">subs</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
-<span class="line-marker"></span>      <span class="comment line double-slash js"><span class="punctuation definition comment js">//</span> item.hidden = true;
-<span class="line-marker"></span></span>      <span class="variable other object js">item</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">appendChild</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">svg</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
+<span class="line-marker"></span>      <span class="variable other object js">item</span><span class="punctuation accessor js">.</span><span class="meta property object js">classList</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">add</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>hidden<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
+<span class="line-marker"></span>      <span class="variable other object js">item</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">appendChild</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">svg</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>      <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">appendChild</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">item</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span>
-<span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
-<span class="line-marker"></span>
-<span class="line-marker"></span>
-<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">faceItem</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
-<span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
-<span class="line-marker"></span>
-<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">switchFaceItem</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
-<span class="line-marker"></span>
 <span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
 <span class="line-marker"></span>
 <span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">async</span><span class="meta function declaration js"> </span></span><span class="meta function declaration js"><span class="entity name function js">shelf</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">_event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
@@ -2555,14 +2579,24 @@ window.Trader = class {
 <span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span>
 <span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
 <span class="line-marker"></span>
-<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">updateItem</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
+<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">updateFaceItem</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
+<span class="line-marker"></span>    <span class="meta conditional js"><span class="keyword control conditional js">if</span> <span class="meta group js"><span class="punctuation section group js">(</span><span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">match</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">event</span><span class="punctuation separator comma js">,</span> <span class="variable other readwrite js">el</span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>item<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation section group js">)</span></span> <span class="meta block js"><span class="punctuation section block js">{</span>
+<span class="line-marker"></span>      <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta property object js">classList</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">remove</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>hidden<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
+<span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span> <span class="meta conditional js"><span class="keyword control conditional js">else</span> <span class="meta block js"><span class="punctuation section block js">{</span>
+<span class="line-marker"></span>      <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta property object js">classList</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">add</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>hidden<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
+<span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span>
+<span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
+<span class="line-marker"></span>
+<span class="line-marker"></span>  <span class="meta function declaration js"><span class="entity name function js">updateShelfItem</span><span class="punctuation section group begin js">(</span><span class="variable parameter function js">event</span><span class="punctuation separator parameter function js">,</span> <span class="variable parameter function js">el</span><span class="punctuation section group end js">)</span><span class="meta function declaration js"> </span></span><span class="meta block js"><span class="punctuation section block js">{</span>
 <span class="line-marker"></span>    <span class="meta conditional js"><span class="keyword control conditional js">if</span> <span class="meta group js"><span class="punctuation section group js">(</span><span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">match</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">event</span><span class="punctuation separator comma js">,</span> <span class="variable other readwrite js">el</span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>item<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation section group js">)</span></span> <span class="meta block js"><span class="punctuation section block js">{</span>
 <span class="line-marker"></span>      <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta property object js">classList</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">add</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>current<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
-<span class="line-marker"></span>      <span class="meta function-call method js"><span class="support type object console js">console</span><span class="punctuation accessor js">.</span><span class="support function console js">log</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">el</span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span> <span class="meta conditional js"><span class="keyword control conditional js">else</span> <span class="meta block js"><span class="punctuation section block js">{</span>
 <span class="line-marker"></span>      <span class="variable other object js">el</span><span class="punctuation accessor js">.</span><span class="meta property object js">classList</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="support function dom js">remove</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>current<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>    </span><span class="meta block js"><span class="punctuation section block js">}</span></span></span>
+<span class="line-marker"></span>    <span class="variable language this js">this</span><span class="punctuation accessor js">.</span><span class="meta property object js">api</span><span class="punctuation accessor js">.</span><span class="meta function-call method js"><span class="variable function js">forward</span><span class="meta group js"><span class="punctuation section group js">(</span><span class="variable other readwrite js">event</span><span class="punctuation separator comma js">,</span> <span class="string quoted double js"><span class="punctuation definition string begin js">&quot;</span>updateFaceItem<span class="punctuation definition string end js">&quot;</span></span></span><span class="meta group js"><span class="punctuation section group js">)</span></span></span><span class="punctuation terminator statement js">;</span>
 <span class="line-marker"></span>  <span class="punctuation section block js">}</span></span>
+<span class="line-marker"></span>
+<span class="line-marker"></span>
 <span class="line-marker"></span>
 <span class="line-marker"></span><span class="punctuation section block js">}</span></span></span><span class="punctuation terminator statement js">;</span></span></code></pre>
 
